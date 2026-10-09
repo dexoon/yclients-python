@@ -161,6 +161,38 @@ python scripts/generate.py
 PARTNER_TOKEN=... USER_TOKEN=... .venv/bin/python examples/basic.py
 ```
 
+## Публикация на PyPI
+
+Публикация автоматическая, через [trusted publishing](https://docs.pypi.org/trusted-publishers/)
+(OIDC, без токенов в секретах): workflow [publish.yml](.github/workflows/publish.yml)
+собирает sdist+wheel, проверяет их `twine check` и загружает при создании GitHub Release.
+
+Разовая настройка (один раз на pypi.org под аккаунтом владельца репозитория):
+
+1. Account settings -> **Publishing** -> *Add a new pending publisher*:
+   - Owner: `dexoon`, Repository: `yclients-python`, Workflow: `publish.yml`, Environment: `pypi`
+2. В репозитории создать environment `pypi` (Settings -> Environments).
+3. То же самое на test.pypi.org -- для пробной публикации.
+
+Релиз:
+
+```bash
+# 1. поднять версию в src/yclients/__init__.py (__version__ -- единый источник)
+# 2. закоммитить и выставить тег
+git tag -a v0.2.0 -m "0.2.0" && git push --tags
+# 3. создать GitHub Release с тегом v0.2.0 -- workflow опубликует пакет
+```
+
+Ручная публикация (если нужно без CI):
+
+```bash
+.venv/bin/pip install -e '.[dev]'
+.venv/bin/python -m build
+.venv/bin/python -m twine check dist/*
+.venv/bin/python -m twine upload --repository testpypi dist/*   # пробная
+.venv/bin/python -m twine upload dist/*                          # боевая
+```
+
 ## Разработка
 
 ```bash

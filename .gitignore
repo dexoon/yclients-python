@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Окружение
+.venv/
+
+# Инструменты
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Скачанная документация сайта
+/ru/

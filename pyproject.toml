@@ -1,0 +1,83 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "yclients"
+version = "0.1.0"
+description = "Асинхронный типизированный Python-клиент для YCLIENTS REST API"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Ilya" }]
+keywords = ["yclients", "api", "async", "client", "booking"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Framework :: AsyncIO",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "respx>=0.21",
+]
+
+[project.urls]
+Documentation = "https://developers.yclients.com/ru/"
+Repository = "https://github.com/dexoon/yclients-python"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/yclients"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    "E501",   # длинные строки в сгенерированном коде допустимы
+    "RUF001", # русские тексты в строках
+    "RUF002", # русские тексты в докстрингах
+    "RUF003", # русские тексты в комментариях
+]
+
+[tool.ruff.lint.per-file-ignores]
+# В сгенерированных моделях много неявных re-export и длинных имён
+"src/yclients/models/*" = ["F401"]
+"src/yclients/resources/*" = []
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["src"]
+
+[[tool.mypy.overrides]]
+module = "yclients.models.*"
+# Сгенерированный код: разрешаем Any из неразобранных схем API
+disallow_any_explicit = false
+disable_error_code = ["misc", "no-any-return"]
+
+[[tool.mypy.overrides]]
+module = "yclients.resources.*"
+disable_error_code = ["no-any-return"]

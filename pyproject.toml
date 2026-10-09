@@ -9,7 +9,7 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.10"
-authors = [{ name = "Ilya", email = "dexoon@users.noreply.github.com" }]
+authors = [{ name = "Ilya Sukhorukov", email = "dexoon@gmail.com" }]
 keywords = ["yclients", "api", "async", "client", "booking", "crm", "httpx", "pydantic"]
 classifiers = [
     "Development Status :: 4 - Beta",

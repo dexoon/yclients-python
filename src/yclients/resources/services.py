@@ -7,13 +7,17 @@ from typing import Any
 
 from yclients._base import BaseClient
 from yclients.models.schemas import (
+    CompanyCompanyidServicesServiceidResponse200DataTypesDataItem,
     DeprecatedServicesCompanyidRequestDataTypes,
+    DeprecatedServicesCompanyidResponseDataTypesData,
     MasterServiceLink2,
     PostServiceIdStaffRequest,
     PutStaffMasterIdRequest,
     ServicesChangeCompanyidRequestDataTypes,
+    ServicesChangeCompanyidResponseDataTypesData,
     ServicesCompanyidLinksRequestDataTypes,
     ServicesCompanyidRequestDataTypes,
+    ServicesCompanyidResponseDataTypesData,
 )
 
 
@@ -28,7 +32,7 @@ class ServicesApi:
         company_id: float,
         data: ServicesCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> ServicesCompanyidResponseDataTypesData:
         """Создать услугу
         Метод, позволяющий создать услугу
         """
@@ -37,7 +41,7 @@ class ServicesApi:
             "/api/v1/services/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=ServicesCompanyidResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -49,7 +53,7 @@ class ServicesApi:
         staff_id: float | None = None,
         category_id: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyCompanyidServicesServiceidResponse200DataTypesDataItem]:
         """Получить список услуг / конкретную услугу
         + Параметр
         + company_id (required, number, `1`) - ID компании
@@ -60,7 +64,7 @@ class ServicesApi:
             "/api/v1/company/{company_id}/services/{service_id}",
             path_params={"company_id": company_id, "service_id": service_id},
             params={"staff_id": staff_id, "category_id": category_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyCompanyidServicesServiceidResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -70,7 +74,7 @@ class ServicesApi:
         service_id: float,
         data: ServicesChangeCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> ServicesChangeCompanyidResponseDataTypesData:
         """Изменить услугу
         Метод, позволяющий изменить услугу
         """
@@ -79,7 +83,7 @@ class ServicesApi:
             "/api/v1/company/{company_id}/services/{service_id}",
             path_params={"company_id": company_id, "service_id": service_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=ServicesChangeCompanyidResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -91,7 +95,7 @@ class ServicesApi:
         staff_id: float | None = None,
         category_id: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyCompanyidServicesServiceidResponse200DataTypesDataItem]:
         """Устаревшее. Получить список услуг / конкретную услугу
         """
         return await self._client.request(
@@ -99,7 +103,7 @@ class ServicesApi:
             "/api/v1/services/{company_id}/{service_id}",
             path_params={"company_id": company_id, "service_id": service_id},
             params={"staff_id": staff_id, "category_id": category_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyCompanyidServicesServiceidResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -109,7 +113,7 @@ class ServicesApi:
         service_id: float,
         data: DeprecatedServicesCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> DeprecatedServicesCompanyidResponseDataTypesData:
         """Устаревшее. Изменить услугу
         Устаревшее. Метод, позволяющий изменить услугу
         """
@@ -118,7 +122,7 @@ class ServicesApi:
             "/api/v1/services/{company_id}/{service_id}",
             path_params={"company_id": company_id, "service_id": service_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=DeprecatedServicesCompanyidResponseDataTypesData,
             extra_query=extra_query,
         )
 

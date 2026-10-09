@@ -8,7 +8,10 @@ from yclients._base import BaseClient
 from yclients.models.common import Page
 from yclients.models.schemas import (
     ActivityCompanyidRequestDataTypes,
+    ActivityCompanyidResponseDataTypesData,
+    ActivityCompanyidSearchResponseDataTypesDataItem,
     ActivityCompanyidServicesRequestDataTypes,
+    ActivityCompanyidServicesResponseDataTypesDataItem,
     ActivityDatesRange,
     ActivityFilter,
 )
@@ -25,7 +28,7 @@ class ActivitiesApi:
         company_id: float,
         data: ActivityCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> ActivityCompanyidResponseDataTypesData:
         """Создание группового события
         """
         return await self._client.request(
@@ -33,7 +36,7 @@ class ActivitiesApi:
             "/api/v1/activity/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=ActivityCompanyidResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -42,14 +45,14 @@ class ActivitiesApi:
         company_id: float,
         activity_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> ActivityCompanyidResponseDataTypesData:
         """Чтение группового события
         """
         return await self._client.request(
             "GET",
             "/api/v1/activity/{company_id}/{activity_id}",
             path_params={"company_id": company_id, "activity_id": activity_id},
-            response_model=dict[str, Any],
+            response_model=ActivityCompanyidResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -59,7 +62,7 @@ class ActivitiesApi:
         activity_id: float,
         data: ActivityCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> ActivityCompanyidResponseDataTypesData:
         """Обновление группового события
         """
         return await self._client.request(
@@ -67,7 +70,7 @@ class ActivitiesApi:
             "/api/v1/activity/{company_id}/{activity_id}",
             path_params={"company_id": company_id, "activity_id": activity_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=ActivityCompanyidResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -159,7 +162,7 @@ class ActivitiesApi:
         page_: float | None = None,
         count_: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[ActivityCompanyidSearchResponseDataTypesDataItem]:
         """Поиск групповых событий
         """
         return await self._client.request(
@@ -167,7 +170,7 @@ class ActivitiesApi:
             "/api/v1/activity/{company_id}/search/",
             path_params={"company_id": company_id},
             params={"from": from_, "till": till, "service_ids": service_ids, "staff_ids": staff_ids, "resource_ids": resource_ids, "page": page_, "count": count_},
-            response_model=list[dict[str, Any]],
+            response_model=list[ActivityCompanyidSearchResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -179,7 +182,7 @@ class ActivitiesApi:
         staff_id: float | None = None,
         term: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[ActivityCompanyidServicesResponseDataTypesDataItem]:
         """Поиск групповых услуг
         """
         return await self._client.request(
@@ -188,7 +191,7 @@ class ActivitiesApi:
             path_params={"company_id": company_id},
             params={"staff_id": staff_id, "term": term},
             json_body=data,
-            response_model=list[dict[str, Any]],
+            response_model=list[ActivityCompanyidServicesResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 

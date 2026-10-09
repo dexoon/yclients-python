@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import StorageOperationOperationResponseDataTypesData
 
 
 class StorageOperationsApi:
@@ -17,7 +18,7 @@ class StorageOperationsApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> StorageOperationOperationResponseDataTypesData:
         """Создание складской операции
         Создание складской операции предполагает создание документа и нескольких товарных транзакций в рамках одного запроса к API.
         """
@@ -25,6 +26,6 @@ class StorageOperationsApi:
             "POST",
             "/api/v1/storage_operations/operation/{company_id}",
             path_params={"company_id": company_id},
-            response_model=dict[str, Any],
+            response_model=StorageOperationOperationResponseDataTypesData,
             extra_query=extra_query,
         )

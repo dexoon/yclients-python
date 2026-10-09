@@ -7,6 +7,7 @@ from typing import Any
 
 from yclients._base import BaseClient
 from yclients.models.schemas import (
+    GoodsCompanyGoodsIdResponse200DataTypesDataItem,
     GoodsCompanyRequestDataType,
     GoodsCompanyRequestWithRulesDataType,
 )
@@ -23,7 +24,7 @@ class GoodsApi:
         company_id: float,
         data: GoodsCompanyRequestDataType,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[GoodsCompanyGoodsIdResponse200DataTypesDataItem]:
         """Создать товар
         Метод позволяет создать товар
         """
@@ -32,7 +33,7 @@ class GoodsApi:
             "/api/v1/goods/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[GoodsCompanyGoodsIdResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -48,7 +49,7 @@ class GoodsApi:
         changed_after: str | None = None,
         changed_before: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[GoodsCompanyGoodsIdResponse200DataTypesDataItem]:
         """Получить товары
         + term: Наименование, артикул или штрих-код
         + page (number, `1`) - Номер страницы (не используется, если передан good_id)
@@ -62,7 +63,7 @@ class GoodsApi:
             "/api/v1/goods/{company_id}/{good_id}",
             path_params={"company_id": company_id, "good_id": good_id},
             params={"term": term, "page": page_, "count": count_, "category_id": category_id, "changed_after": changed_after, "changed_before": changed_before},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[GoodsCompanyGoodsIdResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -72,7 +73,7 @@ class GoodsApi:
         good_id: float,
         data: GoodsCompanyRequestWithRulesDataType,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[GoodsCompanyGoodsIdResponse200DataTypesDataItem]:
         """Редактировать товар
         Метод позволяет изменить параметры товара.
         При редактировании единиц измерения у товара, по которому уже имеются складские операции, необходимо добавлять массив правил пересчета единиц измерения - correction_rules. В ином случае, массив является необязательным.
@@ -82,7 +83,7 @@ class GoodsApi:
             "/api/v1/goods/{company_id}/{good_id}",
             path_params={"company_id": company_id, "good_id": good_id},
             json_body=data,
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[GoodsCompanyGoodsIdResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 

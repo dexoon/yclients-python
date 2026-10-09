@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import ZReportResponseDataTypesData
 
 
 class ReportsApi:
@@ -20,7 +21,7 @@ class ReportsApi:
         start_date: str | None = None,
         master_id: int | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> ZReportResponseDataTypesData:
         """Получить данные Z-Отчета
         + start_date: Дата отчета
         + master_id: ID сотрудника
@@ -30,6 +31,6 @@ class ReportsApi:
             "/api/v1/reports/z_report/{company_id}",
             path_params={"company_id": company_id},
             params={"start_date": start_date, "master_id": master_id},
-            response_model=dict[str, Any],
+            response_model=ZReportResponseDataTypesData,
             extra_query=extra_query,
         )

@@ -2,7 +2,8 @@
 
 Асинхронный типизированный Python-клиент для [YCLIENTS REST API](https://developers.yclients.com/ru/).
 
-Клиент сгенерирован из официальной OpenAPI-спеки: **303 операции**, **66 доменов**, ~380 pydantic-моделей.
+Клиент сгенерирован из официальной OpenAPI-спеки: **303 операции**, **66 доменов**, ~900 pydantic-моделей
+(включая вложенные структуры, вынесенные из inline-схем).
 
 ## Возможности
 
@@ -147,7 +148,7 @@ client = YclientsClient(partner_token="...", http_client=http)
 python scripts/generate.py
 ```
 
-Ручные правки в `src/yclients/models/schemas.py`, `src/yclients/resources/*` и
+Ручные правки в `src/yclients/models/schemas/`, `src/yclients/resources/*` и
 `src/yclients/client.py` будут потеряны -- правьте генератор.
 
 ## Примеры

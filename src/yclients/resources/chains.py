@@ -6,6 +6,7 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import GroupsResponseDataTypesDataItem
 
 
 class ChainsApi:
@@ -17,7 +18,7 @@ class ChainsApi:
     async def list(
         self,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[GroupsResponseDataTypesDataItem]:
         """Получение доступных пользователю сетей
         Объект сети салонов имеет следующие поля:
         | Поле  | Тип | Описание |
@@ -30,6 +31,6 @@ class ChainsApi:
         return await self._client.request(
             "GET",
             "/api/v1/groups",
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[GroupsResponseDataTypesDataItem],
             extra_query=extra_query,
         )

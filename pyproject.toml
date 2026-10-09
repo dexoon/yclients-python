@@ -62,8 +62,11 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-# В сгенерированных моделях много неявных re-export и длинных имён
-"src/yclients/models/*" = ["F401"]
+# В сгенерированных моделях: реэкспорты через star-import; ссылки на модели из
+# соседних модулей пакета schemas разрешаются в рантайме (model_rebuild), поэтому
+# статический F821 здесь ложный
+"src/yclients/models/*" = ["F401", "F403", "F405", "F821"]
+"src/yclients/models/schemas/*" = ["F401", "F403", "F405", "F821"]
 "src/yclients/resources/*" = []
 
 [tool.mypy]
@@ -74,9 +77,10 @@ files = ["src"]
 
 [[tool.mypy.overrides]]
 module = "yclients.models.*"
-# Сгенерированный код: разрешаем Any из неразобранных схем API
+# Сгенерированный код: разрешаем Any из неразобранных схем API; ссылки на модели
+# из соседних модулей schemas не импортированы явно (разрешаются в рантайме)
 disallow_any_explicit = false
-disable_error_code = ["misc", "no-any-return"]
+disable_error_code = ["misc", "no-any-return", "name-defined"]
 
 [[tool.mypy.overrides]]
 module = "yclients.resources.*"

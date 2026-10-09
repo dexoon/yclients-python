@@ -6,7 +6,12 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import StorageOperationDocumentsRequestDataTypes
+from yclients.models.schemas import (
+    StorageOperationDocumentsRequestDataTypes,
+    StorageOperationDocumentsResponseDataTypesData,
+    StorageOperationFinanceTransactionResponseDataTypesDataItem,
+    StorageOperationGoodTransactionResponseDataTypesDataItem,
+)
 
 
 class StorageDocumentsApi:
@@ -20,7 +25,7 @@ class StorageDocumentsApi:
         company_id: float,
         data: StorageOperationDocumentsRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> StorageOperationDocumentsResponseDataTypesData:
         """Создать документ
         """
         return await self._client.request(
@@ -28,7 +33,7 @@ class StorageDocumentsApi:
             "/api/v1/storage_operations/documents/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=StorageOperationDocumentsResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -37,14 +42,14 @@ class StorageDocumentsApi:
         company_id: float,
         document_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> StorageOperationDocumentsResponseDataTypesData:
         """Получить документ
         """
         return await self._client.request(
             "GET",
             "/api/v1/storage_operations/documents/{company_id}/{document_id}",
             path_params={"company_id": company_id, "document_id": document_id},
-            response_model=dict[str, Any],
+            response_model=StorageOperationDocumentsResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -53,14 +58,14 @@ class StorageDocumentsApi:
         company_id: float,
         document_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> StorageOperationDocumentsResponseDataTypesData:
         """Обновить документ
         """
         return await self._client.request(
             "PUT",
             "/api/v1/storage_operations/documents/{company_id}/{document_id}",
             path_params={"company_id": company_id, "document_id": document_id},
-            response_model=dict[str, Any],
+            response_model=StorageOperationDocumentsResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -83,14 +88,14 @@ class StorageDocumentsApi:
         self,
         document_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[StorageOperationFinanceTransactionResponseDataTypesDataItem]:
         """Получить финансовые транзакции документа
         """
         return await self._client.request(
             "GET",
             "/api/v1/storage_operations/documents/finance_transactions/{document_id}",
             path_params={"document_id": document_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[StorageOperationFinanceTransactionResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -98,13 +103,13 @@ class StorageDocumentsApi:
         self,
         document_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[StorageOperationGoodTransactionResponseDataTypesDataItem]:
         """Получить товарные транзакции документа
         """
         return await self._client.request(
             "GET",
             "/api/v1/storage_operations/documents/goods_transactions/{document_id}",
             path_params={"document_id": document_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[StorageOperationGoodTransactionResponseDataTypesDataItem],
             extra_query=extra_query,
         )

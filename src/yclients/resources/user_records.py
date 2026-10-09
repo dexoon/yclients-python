@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import UserRecordsResponseDataTypesDataItem
 
 
 class UserRecordsApi:
@@ -18,7 +19,7 @@ class UserRecordsApi:
         record_id: str,
         record_hash: str,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[UserRecordsResponseDataTypesDataItem]:
         """Получить записи пользователя
         JSON-Объект содержащий параметры записи пользователя имеет следующие поля:
         | Поле | Тип | Обязательный | Описание |
@@ -38,7 +39,7 @@ class UserRecordsApi:
             "GET",
             "/api/v1/user/records/{record_id}/{record_hash}",
             path_params={"record_id": record_id, "record_hash": record_hash},
-            response_model=list[dict[str, Any]],
+            response_model=list[UserRecordsResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 

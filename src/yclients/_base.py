@@ -5,10 +5,11 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import datetime as dt
-from typing import TYPE_CHECKING, Any
+import types
+from typing import TYPE_CHECKING, Any, get_args
 
 import httpx
-from pydantic import BaseModel, TypeAdapter
+from pydantic import BaseModel, TypeAdapter, ValidationError
 
 from .exceptions import (
     YclientsApiError,
@@ -223,6 +224,30 @@ class BaseClient:
             return TypeAdapter(response_model).validate_python(
                 {"data": data, "count": count}
             )
+        return self._validate(data, response_model)
+
+    @staticmethod
+    def _validate(data: Any, response_model: Any) -> Any:
+        """Валидирует ответ; для юниона предпочитает самую точную модель.
+
+        Модели спеки имеют extra="allow" и часто без обязательных полей, поэтому
+        smart-union pydantic выбирает произвольную ветку. Берём ветку, в которой
+        payload целиком лёг в объявленные поля, без поглощения в extra.
+        """
+        if isinstance(response_model, types.UnionType):
+            fallback: Any = None
+            for member in get_args(response_model):
+                if not (isinstance(member, type) and issubclass(member, BaseModel)):
+                    continue
+                try:
+                    candidate = TypeAdapter(member).validate_python(data)
+                except ValidationError:
+                    continue
+                if not getattr(candidate, "model_extra", None):
+                    return candidate
+                fallback = fallback if fallback is not None else candidate
+            if fallback is not None:
+                return fallback
         return TypeAdapter(response_model).validate_python(data)
 
     @staticmethod

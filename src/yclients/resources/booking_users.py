@@ -13,6 +13,7 @@ from yclients.models.schemas import (
     BookingUserGetDataResponseDataTypes,
     BookingUserUpdateInfoRequestDataTypes,
     BookingUserUpdatePasswordRequestDataTypes,
+    BookingUserUpdatePasswordResponseDataTypesData,
 )
 
 
@@ -78,7 +79,7 @@ class BookingUsersApi:
         self,
         data: BookingUserUpdatePasswordRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> BookingUserUpdatePasswordResponseDataTypesData:
         """Обновление пароля пользователя онлайн-записи
         Обновление пароля пользователя онлайн-записи.
         В ответе приходит новый токен пользователя.
@@ -87,7 +88,7 @@ class BookingUsersApi:
             "PUT",
             "/api/v1/booking/user/password",
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=BookingUserUpdatePasswordResponseDataTypesData,
             extra_query=extra_query,
         )
 

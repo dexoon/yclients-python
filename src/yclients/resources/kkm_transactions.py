@@ -6,6 +6,10 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import (
+    KkmTransactionsPrintResponseDataTypeData,
+    KkmTransactionsResponseDataTypeDataItem,
+)
 
 
 class KkmTransactionsApi:
@@ -25,7 +29,7 @@ class KkmTransactionsApi:
         start_date: float | None = None,
         end_date: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[KkmTransactionsResponseDataTypeDataItem]:
         """Получить транзакции
         Фильтры
         | Параметр  | Описание |
@@ -46,7 +50,7 @@ class KkmTransactionsApi:
             "/api/v1/kkm_transactions/{company_id}",
             path_params={"company_id": company_id},
             params={"page": page_, "editable_length": editable_length, "type": type_, "status": status, "start_date": start_date, "end_date": end_date},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[KkmTransactionsResponseDataTypeDataItem],
             extra_query=extra_query,
         )
 
@@ -54,7 +58,7 @@ class KkmTransactionsApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> KkmTransactionsPrintResponseDataTypeData:
         """Напечатать чек
         Типы всех операций c ККМ
         | Значение  | Описание |
@@ -74,6 +78,6 @@ class KkmTransactionsApi:
             "POST",
             "/api/v1/kkm_transactions/{company_id}/print_document_bill",
             path_params={"company_id": company_id},
-            response_model=dict[str, Any],
+            response_model=KkmTransactionsPrintResponseDataTypeData,
             extra_query=extra_query,
         )

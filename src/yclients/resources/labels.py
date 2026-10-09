@@ -6,7 +6,12 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import LabelsUpdateRequestDataTypes
+from yclients.models.schemas import (
+    LabelsClientsResponse200DataTypesDataItem,
+    LabelsCompanyEntityResponse200DataTypesItem,
+    LabelsCreateResponse200DataTypesData,
+    LabelsUpdateRequestDataTypes,
+)
 
 
 class LabelsApi:
@@ -20,14 +25,14 @@ class LabelsApi:
         company_id: float,
         entity: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[LabelsCompanyEntityResponse200DataTypesItem]:
         """Получить категории компании
         """
         return await self._client.request(
             "GET",
             "/api/v1/labels/{company_id}/{entity}",
             path_params={"company_id": company_id, "entity": entity},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[LabelsCompanyEntityResponse200DataTypesItem],
             extra_query=extra_query,
         )
 
@@ -35,14 +40,14 @@ class LabelsApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> LabelsCreateResponse200DataTypesData:
         """Создать клиентскую категорию компании
         """
         return await self._client.request(
             "POST",
             "/api/v1/labels/{company_id}/clients/create",
             path_params={"company_id": company_id},
-            response_model=dict[str, Any],
+            response_model=LabelsCreateResponse200DataTypesData,
             extra_query=extra_query,
         )
 
@@ -55,7 +60,7 @@ class LabelsApi:
         entity: float | None = None,
         icon: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> LabelsCreateResponse200DataTypesData:
         """Создать категорию
         """
         return await self._client.request(
@@ -63,7 +68,7 @@ class LabelsApi:
             "/api/v1/labels/{company_id}",
             path_params={"company_id": company_id},
             params={"title": title, "color": color, "entity": entity, "icon": icon},
-            response_model=dict[str, Any],
+            response_model=LabelsCreateResponse200DataTypesData,
             extra_query=extra_query,
         )
 
@@ -103,13 +108,13 @@ class LabelsApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[LabelsClientsResponse200DataTypesDataItem]:
         """Получить клиентские категории с поиском по названию
         """
         return await self._client.request(
             "GET",
             "/api/v1/labels/{company_id}/clients",
             path_params={"company_id": company_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[LabelsClientsResponse200DataTypesDataItem],
             extra_query=extra_query,
         )

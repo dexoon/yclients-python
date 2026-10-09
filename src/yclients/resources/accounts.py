@@ -6,6 +6,7 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import AccountsResponseDataTypesDataItem
 
 
 class AccountsApi:
@@ -18,7 +19,7 @@ class AccountsApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[AccountsResponseDataTypesDataItem]:
         """Получить кассы компании
         Объект кассы компании имеет следующие поля:
         | Поле  | Тип | Описание |
@@ -32,6 +33,6 @@ class AccountsApi:
             "GET",
             "/api/v1/accounts/{company_id}",
             path_params={"company_id": company_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[AccountsResponseDataTypesDataItem],
             extra_query=extra_query,
         )

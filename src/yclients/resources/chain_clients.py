@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import GroupGroupidClientsResponseDataTypesData
 
 
 class ChainClientsApi:
@@ -19,7 +20,7 @@ class ChainClientsApi:
         *,
         phone: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> GroupGroupidClientsResponseDataTypesData:
         """Получить сетевого клиента по номеру телефона.
         + Параметр
         + group_id (required, number, `43877`) - Id сети салонов
@@ -31,6 +32,6 @@ class ChainClientsApi:
             "/api/v1/group/{group_id}/clients/",
             path_params={"group_id": group_id},
             params={"phone": phone},
-            response_model=dict[str, Any],
+            response_model=GroupGroupidClientsResponseDataTypesData,
             extra_query=extra_query,
         )

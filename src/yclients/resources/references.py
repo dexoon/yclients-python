@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import ReferencesBusinessGroupResponseDataTypesDataItem
 
 
 class ReferencesApi:
@@ -16,12 +17,12 @@ class ReferencesApi:
     async def list_business_groups_with_types(
         self,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[ReferencesBusinessGroupResponseDataTypesDataItem]:
         """Получить бизнес-типы по группам
         """
         return await self._client.request(
             "GET",
             "/api/v1/references/business_groups_with_types",
-            response_model=list[dict[str, Any]],
+            response_model=list[ReferencesBusinessGroupResponseDataTypesDataItem],
             extra_query=extra_query,
         )

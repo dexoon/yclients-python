@@ -73,7 +73,7 @@ async def test_user_accept_header_not_overridden() -> None:
 
 
 async def test_envelope_unwrap(calls: list[RecordedCall]) -> None:
-    payload = [{"id": 1, "title": "Салон"}]
+    payload = [{"id": 1, "title": "Салон", "unknown_extra": "сохранён"}]
 
     def handler(_: httpx.Request) -> httpx.Response:
         return httpx.Response(200, json=envelope(payload, meta={"count": 1}))
@@ -81,7 +81,11 @@ async def test_envelope_unwrap(calls: list[RecordedCall]) -> None:
     async with build_client(handler) as client:
         result = await client.companies.list()
 
-    assert result == payload
+    # data извлечена из конверта и провалидирована в модели
+    assert isinstance(result, list)
+    assert result[0].id_ == 1
+    assert result[0].title == "Салон"
+    assert result[0].model_extra == {"unknown_extra": "сохранён"}
 
 
 async def test_non_envelope_passthrough() -> None:

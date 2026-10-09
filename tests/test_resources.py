@@ -48,7 +48,8 @@ async def test_companies_list_typed_response(calls: list[RecordedCall]) -> None:
         companies = await client.companies.list(my=1)
 
     assert isinstance(companies, list)
-    assert companies[0]["title"] == "Салон"
+    assert companies[0].title == "Салон"
+    assert companies[0].model_extra == {"unknown_extra": "сохранён"}
     assert "my=1" in calls[0].url
 
 

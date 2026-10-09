@@ -15,15 +15,15 @@ USER_TOKEN = os.environ.get("USER_TOKEN")
 
 async def main() -> None:
     async with YclientsClient(PARTNER_TOKEN, USER_TOKEN) as client:
-        # список моих компаний
+        # список моих компаний -- провалидированные модели
         companies = await client.companies.list(my=1)
         for company in companies[:5]:
-            print(f"{company['id']}: {company.get('title')}")
+            print(f"{company.id_}: {company.title}")
 
         if not companies:
             return
 
-        company_id = companies[0]["id"]
+        company_id = companies[0].id_
 
         # клиенты компании (параметры count/page у этого эндпоинта с суффиксом _)
         clients_list = await client.clients.list(company_id, count_=5, page_=1)

@@ -4,7 +4,7 @@
     python scripts/generate.py
 
 Читает docs/openapi.json и перегенерирует:
-    src/yclients/models/schemas.py  -- pydantic-модели компонент спеки
+    src/yclients/models/schemas/    -- pydantic-модели компонент спеки (пакет)
     src/yclients/resources/*.py     -- ресурсные классы по доменам
     src/yclients/client.py          -- фасад YclientsClient
 """
@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import sys
 from collections import defaultdict, deque
 from pathlib import Path
@@ -305,6 +306,10 @@ class SpecNormalizer:
         return name
 
     def normalize(self) -> None:
+        self.normalize_paths()
+        self.normalize_components()
+
+    def normalize_paths(self) -> None:
         for path, path_item in self.spec.get("paths", {}).items():
             if path in SKIP_PATHS:
                 continue
@@ -336,6 +341,36 @@ class SpecNormalizer:
                         content["schema"] = self.inline_to_ref(
                             content["schema"], f"{op_code}Response{code}"
                         )
+
+    def normalize_components(self) -> None:
+        """Выносит inline-объекты из свойств самих компонентов в именованные компоненты.
+
+        Без этого вложенные объекты (свойства, элементы массивов, ветки anyOf)
+        остаются ``dict[str, Any]`` в полях моделей.
+        """
+        for name in list(self.components):
+            schema = self.components[name]
+            if not isinstance(schema, dict) or "$ref" in schema:
+                continue
+            props = schema.get("properties")
+            if isinstance(props, dict):
+                for key, value in props.items():
+                    if isinstance(value, dict) and "$ref" not in value:
+                        props[key] = self.inline_to_ref(
+                            value, f"{name}_{to_snake(str(key))}"
+                        )
+            items = schema.get("items")
+            if isinstance(items, dict) and "$ref" not in items:
+                schema["items"] = self.inline_to_ref(items, f"{name}Item")
+            for key in ("oneOf", "anyOf", "allOf"):
+                variants = schema.get(key)
+                if isinstance(variants, list):
+                    schema[key] = [
+                        self.inline_to_ref(v, f"{name}Variant{i}")
+                        if isinstance(v, dict) and "$ref" not in v
+                        else v
+                        for i, v in enumerate(variants)
+                    ]
 
     def inline_to_ref(self, schema: dict, base_name: str) -> dict:
         """Рекурсивно заменяет inline-объекты/массивы-объекты на $ref."""
@@ -372,7 +407,7 @@ class SpecNormalizer:
                 }
             return schema
 
-        for key in ("oneOf", "anyOf"):
+        for key in ("oneOf", "anyOf", "allOf"):
             if key in schema:
                 schema = {
                     **schema,
@@ -589,27 +624,115 @@ class ModelGenerator:
 
     # -- эмиссия
 
-    def generate(self) -> str:
+    def generate_modules(self) -> dict[str, str]:
+        """Код моделей, разбитый на модули пакета schemas: {имя файла: код}.
+
+        Модели группируются по первой букве класса; слишком большие группы
+        дробятся. Ссылки на модели из других модулей разрешаются отложенно --
+        schemas/__init__.py после импорта вызывает model_rebuild().
+        """
         ordered = self._topological_order()
-        chunks: list[str] = [
-            '"""Модели YCLIENTS API, сгенерированы из docs/openapi.json.\n\nНе редактируйте вручную: запустите scripts/generate.py.\n"""',
-            "",
-            "from __future__ import annotations",
-            "",
-            "from datetime import date, datetime",
-            "from typing import Any, Literal",
-            "",
-            "from pydantic import BaseModel, ConfigDict, Field",
-        ]
-        count = 0
+        emitted: list[str] = []
         for schema_name in ordered:
-            if schema_name in self.used:
+            if schema_name in self.used and self._model(schema_name):
+                emitted.append(schema_name)
+        self.generated_count = len(emitted)
+
+        # группировка по первой букве; крупные буквы дробим на части
+        groups: dict[str, list[str]] = defaultdict(list)
+        for schema_name in emitted:
+            letter = self.class_names[schema_name][0].lower()
+            groups[letter if letter.isalpha() else "misc"].append(schema_name)
+
+        max_per_module = 60
+        modules: dict[str, list[str]] = defaultdict(list)
+        for letter in sorted(groups):
+            names = groups[letter]
+            parts = range(1, len(names) // max_per_module + 2)
+            for part in parts:
+                chunk = names[(part - 1) * max_per_module : part * max_per_module]
+                modules[letter + (str(part) if len(parts) > 1 else "")] = chunk
+
+        result: dict[str, str] = {}
+        for module_name, chunk in modules.items():
+            title = ", ".join(
+                sorted({self.class_names[n][0].upper() for n in chunk})
+            )
+            lines = [
+                f'"""Модели YCLIENTS API ({module_name}: {title}).',
+                "",
+                "Сгенерировано scripts/generate.py -- не редактируйте вручную.",
+                '"""',
+                "",
+                "from __future__ import annotations",
+                "",
+                "from datetime import date, datetime",
+                "from typing import Any, Literal",
+                "",
+                "from pydantic import BaseModel, ConfigDict, Field",
+            ]
+            class_names: list[str] = []
+            for schema_name in chunk:
                 code = self._model(schema_name)
                 if code:
-                    chunks.append(code)
-                    count += 1
-        self.generated_count = count
-        return "\n\n\n".join(chunks) + "\n"
+                    lines.append("")
+                    lines.append("")
+                    lines.append(code)
+                    class_names.append(self.class_names[schema_name])
+            lines.append("")
+            lines.append(f"__all__ = {json.dumps(class_names, indent=4)}")
+            lines.append("")
+            result[f"{module_name}.py"] = "\n".join(lines)
+        self.module_classes = {name: [] for name in result}
+        for module_name, chunk in modules.items():
+            self.module_classes[f"{module_name}.py"] = [
+                self.class_names[n] for n in chunk
+            ]
+        return result
+
+    @staticmethod
+    def build_package_init(modules: dict[str, list[str]]) -> str:
+        """Код schemas/__init__.py: реэкспорт всех моделей + отложенный rebuild."""
+        imports = "\n".join(
+            f"from .{name.removesuffix('.py')} import *" for name in sorted(modules)
+        )
+        all_names = [cls for name in sorted(modules) for cls in modules[name]]
+        all_lines = "\n".join(f'    "{cls}",' for cls in all_names)
+        return f'''"""Модели YCLIENTS API, сгенерированы из docs/openapi.json.
+
+Не редактируйте вручную: запустите scripts/generate.py.
+"""
+
+from pydantic import BaseModel as _BaseModel
+
+{imports}
+
+_namespaces = dict(globals())
+# ссылки на модели из соседних модулей пакета разрешаются здесь, когда
+# уже импортированы все модули; несколько заходов -- для цепочек зависимостей
+for _round in range(5):
+    _incomplete = [
+        _obj
+        for _obj in _namespaces.values()
+        if isinstance(_obj, type)
+        and issubclass(_obj, _BaseModel)
+        and _obj is not _BaseModel
+        and not _obj.__pydantic_complete__
+    ]
+    if not _incomplete:
+        break
+    for _model in _incomplete:
+        _model.model_rebuild(_types_namespace=_namespaces)
+else:
+    raise RuntimeError(
+        "Не удалось разрешить ссылки моделей: "
+        + ", ".join(_obj.__name__ for _obj in _incomplete)
+    )
+
+__all__ = [
+{all_lines}
+]
+'''
 
     def _topological_order(self) -> list[str]:
         deps: dict[str, set[str]] = {}
@@ -697,12 +820,14 @@ class ModelGenerator:
             ann = self._field_annotation(prop, prop_name in required)
             args: list[str] = []
             if str(prop_name) != py_name:
-                args.append(f"alias={json.dumps(str(prop_name))}")
+                args.append(f"alias={json.dumps(str(prop_name), ensure_ascii=False)}")
             if prop.get("description"):
                 desc = " ".join(str(prop["description"]).split())
                 if len(desc) > 200:
                     desc = desc[:197] + "..."
-                args.append(f"description={json.dumps(desc)}")
+                args.append(
+                    f"description={json.dumps(desc, ensure_ascii=False)}"
+                )
             if prop_name in required:
                 if args:
                     field_lines.append(f"    {py_name}: {ann} = Field({', '.join(args)})")
@@ -1169,8 +1294,19 @@ def main() -> int:
             for _, schema in resources._response_schemas(op.op):
                 models.mark_used_from_schema(schema)
 
-    schemas_code = models.generate()
-    (SRC / "models" / "schemas.py").write_text(schemas_code, encoding="utf-8")
+    schemas_modules = models.generate_modules()
+    schemas_dir = SRC / "models" / "schemas"
+    if schemas_dir.exists():
+        shutil.rmtree(schemas_dir)
+    old_schemas_file = SRC / "models" / "schemas.py"
+    if old_schemas_file.exists():
+        old_schemas_file.unlink()
+    schemas_dir.mkdir(parents=True)
+    for filename, code in schemas_modules.items():
+        (schemas_dir / filename).write_text(code, encoding="utf-8")
+    (schemas_dir / "__init__.py").write_text(
+        models.build_package_init(models.module_classes), encoding="utf-8"
+    )
 
     tag_by_module: dict[str, tuple[str, frozenset[str]]] = {}
     for _tag, (module, class_name, nouns) in TAG_MAP.items():

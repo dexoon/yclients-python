@@ -1,7 +1,7 @@
 """Модели YCLIENTS API: общие + сгенерированные из спеки."""
 
 from .common import ApiEnvelope, Page, ValidationErrorItem
-from .schemas import *  # noqa: F403
+from .schemas import *
 
 __all__ = ["ApiEnvelope", "Page", "ValidationErrorItem"]
 __all__ += [

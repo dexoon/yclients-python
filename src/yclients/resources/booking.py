@@ -6,13 +6,22 @@ from typing import Any
 
 from yclients._base import BaseClient
 from yclients.models.schemas import (
+    ActivityCompanyidActivityidBookResponseDataTypesData,
     BookCheckCompanyidRequestDataTypes,
     BookCheckCompanyidResponse201DataTypes,
     BookCodeCompanyidDataTypeResponse,
     BookCodeCompanyidDataTypesRequest,
+    BookDatesCompanyidDataTypesData,
+    BookformIdInfoDataTypesData,
     BookRecordCompanyidRecordidRecordhashResponseDataTypes,
     BookRecordCompanyidRecordRequestDataTypes,
+    BookRecordCompanyidRecordResponseDataTypesData,
     BookRecordCompanyidRequestDataTypes,
+    BookRecordCompanyidResponseDataTypesDataItem,
+    BookServicesCompanyidDataTypesData,
+    BookStaffCompanyidDataTypesDataItem,
+    BookStaffSeancesCompanyidStaffidDataTypesData,
+    BookTimesCompanyidDataTypesDataItem,
     GetSettingsTimeslotsResponse200Data,
     I18nLangInfoDataTypes,
 )
@@ -28,7 +37,7 @@ class BookingApi:
         self,
         id_: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> BookformIdInfoDataTypesData:
         """Получить настройки формы бронирования
         Каждый клиент сервиса YCLIENTS, может создать неограниченное количество форм онлайн-записи с разным дизайном и для разных сценариев записи.
         Обычно, id формы бронирования хранится в поддомене, например: https://w123.yclients.ru, где 123 - id формы записи. С помощью этого параметра можно получить все остальные необходимые для реализации онлайн-записи параметры, понять, будет происходить запись в конкретную компанию или в сеть компаний.
@@ -48,7 +57,7 @@ class BookingApi:
             "GET",
             "/api/v1/bookform/{id}",
             path_params={"id": id_},
-            response_model=dict[str, Any],
+            response_model=BookformIdInfoDataTypesData,
             extra_query=extra_query,
         )
 
@@ -130,7 +139,7 @@ class BookingApi:
         company_id: float,
         data: BookRecordCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[BookRecordCompanyidResponseDataTypesDataItem]:
         """Создать запись на сеанс
         JSON-Объект содержащий параметры онлайн записи имеет следующие поля:
         | Поле | Тип | Обязательный | Описание |
@@ -151,7 +160,7 @@ class BookingApi:
             "/api/v1/book_record/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=list[dict[str, Any]],
+            response_model=list[BookRecordCompanyidResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -161,7 +170,7 @@ class BookingApi:
         record_id: float,
         data: BookRecordCompanyidRecordRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> BookRecordCompanyidRecordResponseDataTypesData:
         """Перенести запись на сеанс
         """
         return await self._client.request(
@@ -169,7 +178,7 @@ class BookingApi:
             "/api/v1/book_record/{company_id}/{record_id}",
             path_params={"company_id": company_id, "record_id": record_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=BookRecordCompanyidRecordResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -195,14 +204,14 @@ class BookingApi:
         company_id: float,
         activity_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> ActivityCompanyidActivityidBookResponseDataTypesData:
         """Создать запись в групповом событии
         """
         return await self._client.request(
             "POST",
             "/api/v1/activity/{company_id}/{activity_id}/book",
             path_params={"company_id": company_id, "activity_id": activity_id},
-            response_model=dict[str, Any],
+            response_model=ActivityCompanyidActivityidBookResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -216,7 +225,7 @@ class BookingApi:
         date_from: str | None = None,
         date_to: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> BookDatesCompanyidDataTypesData:
         """Получить список дат доступных для бронирования
         Объект даты, доступные для бронирования имеет следующие поля:
         | Поле  | Тип | Описание |
@@ -237,7 +246,7 @@ class BookingApi:
             "/api/v1/book_dates/{company_id}",
             path_params={"company_id": company_id},
             params={"service_ids": service_ids, "staff_id": staff_id, "date": date, "date_from": date_from, "date_to": date_to},
-            response_model=dict[str, Any],
+            response_model=BookDatesCompanyidDataTypesData,
             extra_query=extra_query,
         )
 
@@ -249,7 +258,7 @@ class BookingApi:
         datetime: float | None = None,
         service_ids: list[float] | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> BookServicesCompanyidDataTypesData:
         """Получить список услуг доступных для бронирования
         Объект услуг, доступных для бронирования имеет следующие поля:
         | Поле  | Тип | Описание |
@@ -270,7 +279,7 @@ class BookingApi:
             "/api/v1/book_services/{company_id}",
             path_params={"company_id": company_id},
             params={"staff_id": staff_id, "datetime": datetime, "service_ids": service_ids},
-            response_model=dict[str, Any],
+            response_model=BookServicesCompanyidDataTypesData,
             extra_query=extra_query,
         )
 
@@ -281,7 +290,7 @@ class BookingApi:
         *,
         service_ids: list[float] | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> BookStaffSeancesCompanyidStaffidDataTypesData:
         """Получить список ближайших доступных сеансов
         Объект ближайших сеансов сотрудника имеет следующие поля:
         | Поле | Тип | Описание |
@@ -294,7 +303,7 @@ class BookingApi:
             "/api/v1/book_staff_seances/{company_id}/{staff_id}/",
             path_params={"company_id": company_id, "staff_id": staff_id},
             params={"service_ids": service_ids},
-            response_model=dict[str, Any],
+            response_model=BookStaffSeancesCompanyidStaffidDataTypesData,
             extra_query=extra_query,
         )
 
@@ -305,7 +314,7 @@ class BookingApi:
         service_ids: list[float] | None = None,
         datetime: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[BookStaffCompanyidDataTypesDataItem]:
         """Получить список сотрудников доступных для бронирования
         Каждый объект из массива сотрудников, доступных для бронирования имеет следующие поля:
         | Поле  | Тип | Описание |
@@ -326,7 +335,7 @@ class BookingApi:
             "/api/v1/book_staff/{company_id}",
             path_params={"company_id": company_id},
             params={"service_ids": service_ids, "datetime": datetime},
-            response_model=list[dict[str, Any]],
+            response_model=list[BookStaffCompanyidDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -338,7 +347,7 @@ class BookingApi:
         *,
         service_ids: list[float] | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[BookTimesCompanyidDataTypesDataItem]:
         """Получить список сеансов доступных для бронирования
         Объект сеансы, доступные для бронирования имеет следующие поля:
         | Поле  | Тип | Описание |
@@ -354,7 +363,7 @@ class BookingApi:
             "/api/v1/book_times/{company_id}/{staff_id}/{date}",
             path_params={"company_id": company_id, "staff_id": staff_id, "date": date},
             params={"service_ids": service_ids},
-            response_model=list[dict[str, Any]],
+            response_model=list[BookTimesCompanyidDataTypesDataItem],
             extra_query=extra_query,
         )
 

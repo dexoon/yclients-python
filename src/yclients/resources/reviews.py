@@ -5,7 +5,10 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import MasterRecordReviewPostRequest
+from yclients.models.schemas import (
+    MasterRecordReviewPostRequest,
+    MasterRecordReviewResponseDataTypesData,
+)
 
 
 class ReviewsApi:
@@ -18,14 +21,14 @@ class ReviewsApi:
         self,
         record_token: str,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> MasterRecordReviewResponseDataTypesData:
         """Получение статуса формы отзыва
         """
         return await self._client.request(
             "GET",
             "/api/v1/master_record_review/{recordToken}",
             path_params={"recordToken": record_token},
-            response_model=dict[str, Any],
+            response_model=MasterRecordReviewResponseDataTypesData,
             extra_query=extra_query,
         )
 

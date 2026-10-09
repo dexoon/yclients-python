@@ -10,6 +10,7 @@ from yclients.models.schemas import (
     VisitLoyaltyApplyResponseDataTypes,
     VisitLoyaltyCancelResponseDataTypes,
     VisitLoyaltyRequestDataTypes,
+    VisitLoyaltyTransactionReaponseDataTypesItem,
 )
 
 
@@ -112,7 +113,7 @@ class VisitLoyaltyApi:
         self,
         visit_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[VisitLoyaltyTransactionReaponseDataTypesItem]:
         """Получить транзакции лояльности по визиту
         Список транзакций по акциям лояльнсти для данного визита
         """
@@ -120,6 +121,6 @@ class VisitLoyaltyApi:
             "GET",
             "/api/v1/visit/loyalty/transactions/{visit_id}",
             path_params={"visit_id": visit_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[VisitLoyaltyTransactionReaponseDataTypesItem],
             extra_query=extra_query,
         )

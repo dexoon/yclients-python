@@ -7,6 +7,7 @@ from typing import Any
 
 from yclients._base import BaseClient
 from yclients.models.schemas import (
+    LoyaltyAbonementsResponseDataTypesDataItem,
     PostAbonementIdFreezeRequest,
     PostAbonementIdSetBalanceRequest,
     PostAbonementIdSetPeriodRequest,
@@ -112,7 +113,7 @@ class AbonementsApi:
         company_id: float | None = None,
         phone: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[LoyaltyAbonementsResponseDataTypesDataItem]:
         """Получить абонементы клиента
         Возвращает список абонементов клиента по телефону
         """
@@ -120,7 +121,7 @@ class AbonementsApi:
             "GET",
             "/api/v1/loyalty/abonements/",
             params={"company_id": company_id, "phone": phone},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[LoyaltyAbonementsResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -129,7 +130,7 @@ class AbonementsApi:
         *,
         company_id: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[LoyaltyAbonementsResponseDataTypesDataItem]:
         """Получить абонементы пользователя
         Возвращает список абонементов авторизованного пользователя
         """
@@ -137,6 +138,6 @@ class AbonementsApi:
             "GET",
             "/api/v1/user/loyalty/abonements/",
             params={"company_id": company_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[LoyaltyAbonementsResponseDataTypesDataItem],
             extra_query=extra_query,
         )

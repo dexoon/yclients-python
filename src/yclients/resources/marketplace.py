@@ -6,6 +6,7 @@ from typing import Any
 
 from yclients._base import BaseClient
 from yclients.models.schemas import (
+    CompaniesDataTypes2DataItem,
     GetApplicationApplicationIdResponse200Data,
     GetApplicationIdTariffsResponse200DataItem,
     GetApplicationPaymentLinkResponse200Data,
@@ -146,7 +147,7 @@ class MarketplaceApi:
         page_: float | None = None,
         count_: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[CompaniesDataTypes2DataItem]:
         """Данные о салонах, подключивших приложение
         Данный эндпойнт предназначен для получения списка салонов, которые подключили некоторое приложение, с подробной информацией о них
         """
@@ -155,7 +156,7 @@ class MarketplaceApi:
             "/marketplace/application/{application_id}/salons",
             path_params={"application_id": application_id},
             params={"page": page_, "count": count_},
-            response_model=list[dict[str, Any]],
+            response_model=list[CompaniesDataTypes2DataItem],
             extra_query=extra_query,
         )
 

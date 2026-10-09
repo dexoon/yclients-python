@@ -6,6 +6,11 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import (
+    TechnologicalCardsConsumablesResponse200DataTypesDataItem,
+    TechnologicalCardsConsumablesResponse200DeleteDataTypesDataItem,
+    TechnologicalCardsResponse200DataTypesDataItem,
+)
 
 
 class TechnologicalCardsApi:
@@ -22,7 +27,7 @@ class TechnologicalCardsApi:
         page_: float | None = None,
         count_: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[TechnologicalCardsResponse200DataTypesDataItem]:
         """Получить список тех карт
         """
         return await self._client.request(
@@ -30,7 +35,7 @@ class TechnologicalCardsApi:
             "/api/v1/technological_cards/{company_id}/",
             path_params={"company_id": company_id},
             params={"search": search, "page": page_, "count": count_},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[TechnologicalCardsResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -40,14 +45,14 @@ class TechnologicalCardsApi:
         staff_id: float,
         service_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[TechnologicalCardsResponse200DataTypesDataItem]:
         """Получить тех карту для связи сотрудник услуга
         """
         return await self._client.request(
             "GET",
             "/api/v1/technological_cards/default_for_staff_and_service/{company_id}/{staffId}/{serviceId}/",
             path_params={"company_id": company_id, "staffId": staff_id, "serviceId": service_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[TechnologicalCardsResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -56,14 +61,14 @@ class TechnologicalCardsApi:
         company_id: float,
         record_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[TechnologicalCardsConsumablesResponse200DataTypesDataItem]:
         """Получить список тех карт и расходников записи
         """
         return await self._client.request(
             "GET",
             "/api/v1/technological_cards/record_consumables/{company_id}/{record_id}/",
             path_params={"company_id": company_id, "record_id": record_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[TechnologicalCardsConsumablesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -73,14 +78,14 @@ class TechnologicalCardsApi:
         record_id: float,
         service_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[TechnologicalCardsConsumablesResponse200DeleteDataTypesDataItem]:
         """Удалить технологическую из связи запись-услуга
         """
         return await self._client.request(
             "DELETE",
             "/api/v1/technological_cards/record_consumables/technological_cards/{company_id}/{record_id}/{service_id}",
             path_params={"company_id": company_id, "record_id": record_id, "service_id": service_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[TechnologicalCardsConsumablesResponse200DeleteDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -91,7 +96,7 @@ class TechnologicalCardsApi:
         service_id: float,
         data: dict[str, Any],
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[TechnologicalCardsConsumablesResponse200DataTypesDataItem]:
         """Изменить список расходников связи запись-услуга
         """
         return await self._client.request(
@@ -99,6 +104,6 @@ class TechnologicalCardsApi:
             "/api/v1/technological_cards/record_consumables/consumables/{company_id}/{record_id}/{service_id}/",
             path_params={"company_id": company_id, "record_id": record_id, "service_id": service_id},
             json_body=data,
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[TechnologicalCardsConsumablesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )

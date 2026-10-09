@@ -6,6 +6,7 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import LoyaltyCertificatesResponseDataTypesDataItem
 
 
 class CertificatesApi:
@@ -20,7 +21,7 @@ class CertificatesApi:
         company_id: float | None = None,
         phone: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[LoyaltyCertificatesResponseDataTypesDataItem]:
         """Получить сертификаты клиента
         Возвращает список сертификатов клиента по телефону
         | Атрибут         | Тип       | Описание                                           |
@@ -40,7 +41,7 @@ class CertificatesApi:
             "GET",
             "/api/v1/loyalty/certificates/",
             params={"company_id": company_id, "phone": phone},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[LoyaltyCertificatesResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -49,7 +50,7 @@ class CertificatesApi:
         *,
         company_id: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[LoyaltyCertificatesResponseDataTypesDataItem]:
         """Получить сертификаты пользователя
         Возвращает список сертификатов авторизованного пользователя
         """
@@ -57,6 +58,6 @@ class CertificatesApi:
             "GET",
             "/api/v1/user/loyalty/certificates/",
             params={"company_id": company_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[LoyaltyCertificatesResponseDataTypesDataItem],
             extra_query=extra_query,
         )

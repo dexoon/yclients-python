@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import PostInviteSalonIdRequest
+from yclients.models.schemas import PostInviteSalonIdRequest, UserPermissionsResponseDataTypesData
 
 
 class UserApi:
@@ -18,7 +18,7 @@ class UserApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> UserPermissionsResponseDataTypesData:
         """Получить список прав
         + Параметр
         + company_id (required, number, `1`) - ID компании
@@ -27,7 +27,7 @@ class UserApi:
             "GET",
             "/api/v1/user/permissions/{company_id}",
             path_params={"company_id": company_id},
-            response_model=dict[str, Any],
+            response_model=UserPermissionsResponseDataTypesData,
             extra_query=extra_query,
         )
 

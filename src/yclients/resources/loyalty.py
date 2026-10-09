@@ -6,6 +6,12 @@ from typing import Any, Literal
 
 from yclients._base import BaseClient
 from yclients.models.schemas import (
+    CompanyAnalyticsLoyaltyProgramsIncomeDataTypesData,
+    CompanyAnalyticsLoyaltyProgramsStaffDataTypesDataItem,
+    CompanyAnalyticsLoyaltyProgramsVisitsDataTypesData,
+    CompanyLoyaltyProgramsSearchDataTypesDataItem,
+    LoyaltyAbonementsTypeSearchResponseDataTypesDataItem,
+    LoyaltyCertificateTypeSearchResponseDataTypesDataItem,
     LoyaltyGenerateCode200DataOption2,
     LoyaltyNotificationMessageTemplate2,
     LoyaltyProgram2,
@@ -164,7 +170,7 @@ class LoyaltyApi:
         page_: float | None = None,
         page_size: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[LoyaltyAbonementsTypeSearchResponseDataTypesDataItem]:
         """Получить список доступных типов абонементов
         Список **типов абонементов**, доступных в филиале, можно получить, сделав запрос с указанием идентификатора филиала.
         Список можно отфильтровать по названию типа абонемента, передав параметр `title`.
@@ -185,7 +191,7 @@ class LoyaltyApi:
             "/api/v1/company/{company_id}/loyalty/abonement_types/search",
             path_params={"company_id": company_id},
             params={"title": title, "page": page_, "page_size": page_size},
-            response_model=list[dict[str, Any]],
+            response_model=list[LoyaltyAbonementsTypeSearchResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -195,7 +201,7 @@ class LoyaltyApi:
         *,
         ids: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[LoyaltyAbonementsTypeSearchResponseDataTypesDataItem]:
         """Получить список типов абонементов по идентификатору
         Список **типов абонементов**, доступных в филиале, можно получить, сделав запрос с указанием идентификатора филиала и идентификаторов типов абонементов.
         Список представляет собой массив [типов абонементов](#loyalty-abonement-type).
@@ -209,7 +215,7 @@ class LoyaltyApi:
             "/api/v1/company/{company_id}/loyalty/abonement_types/fetch",
             path_params={"company_id": company_id},
             params={"ids[]": ids},
-            response_model=list[dict[str, Any]],
+            response_model=list[LoyaltyAbonementsTypeSearchResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -221,7 +227,7 @@ class LoyaltyApi:
         page_: float | None = None,
         page_size: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[LoyaltyCertificateTypeSearchResponseDataTypesDataItem]:
         """Получить список доступных типов сертификатов
         Список **типов сертификатов**, доступных в филиале, можно получить, сделав запрос с указанием идентификатора филиала.
         Список можно отфильтровать по названию типа сертификата, передав параметр `title`.
@@ -242,7 +248,7 @@ class LoyaltyApi:
             "/api/v1/company/{company_id}/loyalty/certificate_types/search",
             path_params={"company_id": company_id},
             params={"title": title, "page": page_, "page_size": page_size},
-            response_model=list[dict[str, Any]],
+            response_model=list[LoyaltyCertificateTypeSearchResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -250,7 +256,7 @@ class LoyaltyApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[LoyaltyCertificateTypeSearchResponseDataTypesDataItem]:
         """Получить список типов сертификатов по идентификатору
         Список **типов сертификатов**, доступных в филиале, можно получить, сделав запрос с указанием идентификатора филиала и идентификаторов типов сертификатов.
         Список представляет собой массив [типов сертификатов](#loyalty-certificate-type).
@@ -259,7 +265,7 @@ class LoyaltyApi:
             "GET",
             "/api/v1/company/{company_id}/loyalty/certificate_types/fetch",
             path_params={"company_id": company_id},
-            response_model=list[dict[str, Any]],
+            response_model=list[LoyaltyCertificateTypeSearchResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -270,7 +276,7 @@ class LoyaltyApi:
         include: str | None = None,
         type_: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[CompanyLoyaltyProgramsSearchDataTypesDataItem]:
         """Получить список акций, действующих в филиале
         Метод позволяет получить список акций, которые активны для указанного филиала.
         """
@@ -279,7 +285,7 @@ class LoyaltyApi:
             "/api/v1/company/{company_id}/loyalty/programs/search",
             path_params={"company_id": company_id},
             params={"include": include, "type": type_},
-            response_model=list[dict[str, Any]],
+            response_model=list[CompanyLoyaltyProgramsSearchDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -291,7 +297,7 @@ class LoyaltyApi:
         date_from: str | None = None,
         loyalty_program_id: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> CompanyAnalyticsLoyaltyProgramsVisitsDataTypesData:
         """Получить статистику по клиентам
         Метод позволяет получить статистику по вернувшимся, новым и потерянным клиентам
         """
@@ -300,7 +306,7 @@ class LoyaltyApi:
             "/api/v1/company/{company_id}/analytics/loyalty_programs/visits",
             path_params={"company_id": company_id},
             params={"date_to": date_to, "date_from": date_from, "loyalty_program_id": loyalty_program_id},
-            response_model=dict[str, Any],
+            response_model=CompanyAnalyticsLoyaltyProgramsVisitsDataTypesData,
             extra_query=extra_query,
         )
 
@@ -312,7 +318,7 @@ class LoyaltyApi:
         date_from: str | None = None,
         loyalty_program_id: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> CompanyAnalyticsLoyaltyProgramsIncomeDataTypesData:
         """Получить статистику по выручке
         Метод позволяет получить статистику по выручке.
         """
@@ -321,7 +327,7 @@ class LoyaltyApi:
             "/api/v1/company/{company_id}/analytics/loyalty_programs/income/",
             path_params={"company_id": company_id},
             params={"date_to": date_to, "date_from": date_from, "loyalty_program_id": loyalty_program_id},
-            response_model=dict[str, Any],
+            response_model=CompanyAnalyticsLoyaltyProgramsIncomeDataTypesData,
             extra_query=extra_query,
         )
 
@@ -333,7 +339,7 @@ class LoyaltyApi:
         date_from: str | None = None,
         loyalty_program_id: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[CompanyAnalyticsLoyaltyProgramsStaffDataTypesDataItem]:
         """Получить возвращаемость по сотруднику
         Метод позволяет получить статистику возвращаемости по сотруднику
         """
@@ -342,6 +348,6 @@ class LoyaltyApi:
             "/api/v1/company/{company_id}/analytics/loyalty_programs/staff/",
             path_params={"company_id": company_id},
             params={"date_to": date_to, "date_from": date_from, "loyalty_program_id": loyalty_program_id},
-            response_model=list[dict[str, Any]],
+            response_model=list[CompanyAnalyticsLoyaltyProgramsStaffDataTypesDataItem],
             extra_query=extra_query,
         )

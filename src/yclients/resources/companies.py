@@ -7,7 +7,10 @@ from typing import Any, Literal
 
 from yclients._base import BaseClient
 from yclients.models.schemas import (
+    CompaniesDataTypesDataItem,
     CompanyCreateRequestDataTypes,
+    CompanyCreateResponseDataTypesData,
+    CompanyGetResponseDataTypesData,
     CompanyPutRequestDataTypes,
     CompanyPutResponseDataTypes,
 )
@@ -44,7 +47,7 @@ class CompaniesApi:
         count_: float | None = None,
         page_: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompaniesDataTypesDataItem]:
         """Получить список компаний
         Получить список с данными о компаниях
         """
@@ -52,7 +55,7 @@ class CompaniesApi:
             "GET",
             "/api/v1/companies",
             params={"id": id_, "group_id": group_id, "my": my, "active": active, "moderated": moderated, "forBooking": for_booking, "show_groups": show_groups, "city_id": city_id, "showBookforms": show_bookforms, "vk_api_id": vk_api_id, "min_id": min_id, "show_deleted": show_deleted, "hide_record_type_single": hide_record_type_single, "hide_record_type_activity": hide_record_type_activity, "hide_record_type_mixed": hide_record_type_mixed, "business_group_id": business_group_id, "business_type_id": business_type_id, "yandex": yandex, "include": include, "count": count_, "page": page_},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompaniesDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -60,7 +63,7 @@ class CompaniesApi:
         self,
         data: CompanyCreateRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> CompanyCreateResponseDataTypesData:
         """Создать компанию
         Создать новую компанию.
         """
@@ -68,7 +71,7 @@ class CompaniesApi:
             "POST",
             "/api/v1/companies",
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=CompanyCreateResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -82,7 +85,7 @@ class CompaniesApi:
         show_bookforms: float | None = None,
         bookform_id: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> CompanyGetResponseDataTypesData:
         """Получить компанию
         Получение данных о компании.
         """
@@ -91,7 +94,7 @@ class CompaniesApi:
             "/api/v1/company/{id}/",
             path_params={"id": id_},
             params={"my": my, "forBooking": for_booking, "show_groups": show_groups, "showBookforms": show_bookforms, "bookform_id": bookform_id},
-            response_model=dict[str, Any],
+            response_model=CompanyGetResponseDataTypesData,
             extra_query=extra_query,
         )
 

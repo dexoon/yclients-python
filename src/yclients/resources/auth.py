@@ -5,7 +5,12 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import AuthRequest2, AuthRequest2fa, AuthResponse2
+from yclients.models.schemas import (
+    AuthRequest2,
+    AuthRequest2fa,
+    AuthResponse2,
+    AuthResponse2faNeedData,
+)
 
 
 class AuthApi:
@@ -18,7 +23,7 @@ class AuthApi:
         self,
         data: AuthRequest2 | AuthRequest2fa,
         extra_query: dict[str, Any] | None = None
-    ) -> (AuthResponse2 | dict[str, Any]):
+    ) -> (AuthResponse2faNeedData | AuthResponse2):
         """Авторизовать пользователя
         При смене пароля пользователем его API-ключ изменится и потребуется новая авторизация.
         ⚠️ В зависимости от того, включена у пользователя 2fa или нет, будет зависеть ответ и необходимость
@@ -28,6 +33,6 @@ class AuthApi:
             "POST",
             "/api/v1/auth",
             json_body=data,
-            response_model=(AuthResponse2 | dict[str, Any]),
+            response_model=(AuthResponse2faNeedData | AuthResponse2),
             extra_query=extra_query,
         )

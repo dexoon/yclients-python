@@ -11,6 +11,7 @@ from yclients.models.schemas import (
     LoyaltyCardsRequestDataTypes,
     LoyaltyCardsResponseDataTypes,
     LoyaltyCardType2,
+    LoyaltyCardTypesResponseDataTypesItem,
     PostCardIdManualTransactionRequest,
     PostCardIdManualTransactionRequest2,
 )
@@ -26,7 +27,7 @@ class LoyaltyCardsApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[LoyaltyCardTypesResponseDataTypesItem]:
         """Получить список типов карт доступных в филиале
         Возвращает список типов карт, которые действуют для данного филиала.
         Атрибуты и их описания соответсвуют методу "Коллекция типов карт доступных клиенту", описанному выше.
@@ -35,7 +36,7 @@ class LoyaltyCardsApi:
             "GET",
             "/api/v1/loyalty/card_types/salon/{company_id}",
             path_params={"company_id": company_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[LoyaltyCardTypesResponseDataTypesItem],
             extra_query=extra_query,
         )
 
@@ -197,7 +198,7 @@ class LoyaltyCardsApi:
         company_id: float,
         phone: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[LoyaltyCardTypesResponseDataTypesItem]:
         """Получить список типов карт доступных для выдачи клиенту
         Возвращает список типов карт, которые доступны для выдачи клиенту салона.
         | Атрибут        | Тип    | Описание                                                                                                     |
@@ -211,6 +212,6 @@ class LoyaltyCardsApi:
             "GET",
             "/api/v1/loyalty/card_types/client/{company_id}/{phone}",
             path_params={"company_id": company_id, "phone": phone},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[LoyaltyCardTypesResponseDataTypesItem],
             extra_query=extra_query,
         )

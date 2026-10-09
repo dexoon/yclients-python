@@ -7,7 +7,9 @@ from typing import Any
 
 from yclients._base import BaseClient
 from yclients.models.schemas import (
+    CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem,
     ServiceCategoriesCompanyidRequestDataTypes,
+    ServiceCategoriesCompanyidResponseDataTypesData,
     ServiceCategoryTitle2,
 )
 
@@ -23,7 +25,7 @@ class ServiceCategoriesApi:
         company_id: str,
         data: ServiceCategoriesCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> ServiceCategoriesCompanyidResponseDataTypesData:
         """Создать категорию услугу
         """
         return await self._client.request(
@@ -31,7 +33,7 @@ class ServiceCategoriesApi:
             "/api/v1/service_categories/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=ServiceCategoriesCompanyidResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -40,14 +42,14 @@ class ServiceCategoriesApi:
         company_id: float,
         id_: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem]:
         """Получить категорию услуг
         """
         return await self._client.request(
             "GET",
             "/api/v1/service_category/{company_id}/{id}",
             path_params={"company_id": company_id, "id": id_},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -57,7 +59,7 @@ class ServiceCategoriesApi:
         id_: float,
         data: ServiceCategoriesCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem]:
         """Изменить категорию услуг
         """
         return await self._client.request(
@@ -65,7 +67,7 @@ class ServiceCategoriesApi:
             "/api/v1/service_category/{company_id}/{id}",
             path_params={"company_id": company_id, "id": id_},
             json_body=data,
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -109,7 +111,7 @@ class ServiceCategoriesApi:
         *,
         staff_id: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem]:
         """Получить список категорий услуг
         + Параметры
         + company_id (required, number) - ID компании
@@ -121,7 +123,7 @@ class ServiceCategoriesApi:
             "/api/v1/company/{company_id}/service_categories/{id}",
             path_params={"company_id": company_id, "id": id_},
             params={"staff_id": staff_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -130,7 +132,7 @@ class ServiceCategoriesApi:
         company_id: float,
         id_: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem]:
         """Устаревшее. Получить список категорий услуг
         Получить список категорий услуг
         """
@@ -138,6 +140,6 @@ class ServiceCategoriesApi:
             "GET",
             "/api/v1/service_categories/{company_id}/{id}",
             path_params={"company_id": company_id, "id": id_},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyCompanyidServiceCategoriesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )

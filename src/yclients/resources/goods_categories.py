@@ -6,7 +6,13 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import GoodsCategoriesRequestDataTypes
+from yclients.models.schemas import (
+    GoodsCategoriesPostPutResponseDataTypesData,
+    GoodsCategoriesRequestDataTypes,
+    GoodsCategoriesResponse200DataTypesDataItem,
+    GoodsCategoryNodeResponse200DataTypesData,
+    GoodsSearchResponse200DataTypesDataItem,
+)
 
 
 class GoodsCategoriesApi:
@@ -22,7 +28,7 @@ class GoodsCategoriesApi:
         search_term: str | None = None,
         max_count: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[GoodsSearchResponse200DataTypesDataItem]:
         """Пример запроса на получение списка
         ### Список товаров и товарных категорий
         Список **товаров и товарных категорий** можно получить, сделав запрос с указанием идентификатора филиала.
@@ -43,7 +49,7 @@ class GoodsCategoriesApi:
             "/api/v1/goods/search/{company_id}",
             path_params={"company_id": company_id},
             params={"search_term": search_term, "max_count": max_count},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[GoodsSearchResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -55,7 +61,7 @@ class GoodsCategoriesApi:
         page_: float | None = None,
         count_: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> GoodsCategoryNodeResponse200DataTypesData:
         """Пример запроса на получение состава категории
         ##№ Состав товарной категории
         Информацию по товарной категории и ее потомкам можно получить, сделав запрос с указанием идентификатора филиала и товарной категории.
@@ -76,7 +82,7 @@ class GoodsCategoriesApi:
             "/api/v1/goods/category_node/{company_id}/{category_id}",
             path_params={"company_id": company_id, "category_id": category_id},
             params={"page": page_, "count": count_},
-            response_model=dict[str, Any],
+            response_model=GoodsCategoryNodeResponse200DataTypesData,
             extra_query=extra_query,
         )
 
@@ -85,14 +91,14 @@ class GoodsCategoriesApi:
         company_id: float,
         parent_category_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[GoodsCategoriesResponse200DataTypesDataItem]:
         """Получить список категорий товаров
         """
         return await self._client.request(
             "GET",
             "/api/v1/goods_categories/{company_id}/{parent_category_id}",
             path_params={"company_id": company_id, "parent_category_id": parent_category_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[GoodsCategoriesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -102,7 +108,7 @@ class GoodsCategoriesApi:
         *,
         id_: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[GoodsCategoriesResponse200DataTypesDataItem]:
         """Получить список категорий товаров по идентификатору
         """
         return await self._client.request(
@@ -110,7 +116,7 @@ class GoodsCategoriesApi:
             "/api/v1/goods_categories/multiple/{company_id}",
             path_params={"company_id": company_id},
             params={"id": id_},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[GoodsCategoriesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -123,7 +129,7 @@ class GoodsCategoriesApi:
         content_type: str | None = None,
         authorization: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[GoodsCategoriesResponse200DataTypesDataItem]:
         """Пример запроса на получение категорий
         """
         return await self._client.request(
@@ -131,7 +137,7 @@ class GoodsCategoriesApi:
             "/api/v1/company/{company_id}/goods_categories/{parent_category_id}",
             path_params={"company_id": company_id, "parent_category_id": parent_category_id},
             params={"Accept": accept, "Content-Type": content_type, "Authorization": authorization},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[GoodsCategoriesResponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -140,7 +146,7 @@ class GoodsCategoriesApi:
         company_id: float,
         data: GoodsCategoriesRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> GoodsCategoriesPostPutResponseDataTypesData:
         """Создать категорию товаров
         Метод позволяет создать категорию товаров.
         """
@@ -149,7 +155,7 @@ class GoodsCategoriesApi:
             "/api/v1/goods_categories/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=GoodsCategoriesPostPutResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -159,7 +165,7 @@ class GoodsCategoriesApi:
         category_id: float,
         data: GoodsCategoriesRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> GoodsCategoriesPostPutResponseDataTypesData:
         """Редактировать категорию товаров
         Метод позволяет отредактировать категорию товаров
         """
@@ -168,7 +174,7 @@ class GoodsCategoriesApi:
             "/api/v1/goods_categories/{company_id}/{category_id}",
             path_params={"company_id": company_id, "category_id": category_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=GoodsCategoriesPostPutResponseDataTypesData,
             extra_query=extra_query,
         )
 

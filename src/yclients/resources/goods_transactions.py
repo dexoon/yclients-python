@@ -6,7 +6,11 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import StorageOperationGoodTransactionRequestDataTypes
+from yclients.models.schemas import (
+    StorageOperationGoodTransactionRequestDataTypes,
+    StorageOperationGoodTransactionResponse200DataTypesData,
+    StoragesTransactionResponseDataTypesDataItem,
+)
 
 
 class GoodsTransactionsApi:
@@ -27,7 +31,7 @@ class GoodsTransactionsApi:
         changed_after: Any | None = None,
         changed_before: Any | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[StoragesTransactionResponseDataTypesDataItem]:
         """Поиск товарных транзакций
         """
         return await self._client.request(
@@ -35,7 +39,7 @@ class GoodsTransactionsApi:
             "/api/v1/storages/transactions/{company_id}",
             path_params={"company_id": company_id},
             params={"page": page_, "count": count_, "start_date": start_date, "end_date": end_date, "document_id": document_id, "changed_after": changed_after, "changed_before": changed_before},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[StoragesTransactionResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -44,7 +48,7 @@ class GoodsTransactionsApi:
         company_id: float,
         data: StorageOperationGoodTransactionRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> StorageOperationGoodTransactionResponse200DataTypesData:
         """Создать транзакцию
         """
         return await self._client.request(
@@ -52,7 +56,7 @@ class GoodsTransactionsApi:
             "/api/v1/storage_operations/goods_transactions/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=StorageOperationGoodTransactionResponse200DataTypesData,
             extra_query=extra_query,
         )
 
@@ -61,14 +65,14 @@ class GoodsTransactionsApi:
         company_id: float,
         transaction_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> StorageOperationGoodTransactionResponse200DataTypesData:
         """Получение транзакции
         """
         return await self._client.request(
             "GET",
             "/api/v1/storage_operations/goods_transactions/{company_id}/{transaction_id}",
             path_params={"company_id": company_id, "transaction_id": transaction_id},
-            response_model=dict[str, Any],
+            response_model=StorageOperationGoodTransactionResponse200DataTypesData,
             extra_query=extra_query,
         )
 
@@ -77,14 +81,14 @@ class GoodsTransactionsApi:
         company_id: float,
         transaction_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> StorageOperationGoodTransactionResponse200DataTypesData:
         """Обновление транзакции
         """
         return await self._client.request(
             "PUT",
             "/api/v1/storage_operations/goods_transactions/{company_id}/{transaction_id}",
             path_params={"company_id": company_id, "transaction_id": transaction_id},
-            response_model=dict[str, Any],
+            response_model=StorageOperationGoodTransactionResponse200DataTypesData,
             extra_query=extra_query,
         )
 

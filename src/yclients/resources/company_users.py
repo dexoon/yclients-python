@@ -6,6 +6,10 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import (
+    CompanyCompanyIdUsersResponseDataTypesDataItem,
+    CompanyUsersDeprecatedResponseDataTypesDataItem,
+)
 
 
 class CompanyUsersApi:
@@ -18,7 +22,7 @@ class CompanyUsersApi:
         self,
         company_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyUsersDeprecatedResponseDataTypesDataItem]:
         """Устаревшее. Получить пользователей компании
         Объект пользователь компании имеет следующие поля:
         | Поле  | Тип | Описание |
@@ -38,7 +42,7 @@ class CompanyUsersApi:
             "GET",
             "/api/v1/company_users/{company_id}",
             path_params={"company_id": company_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyUsersDeprecatedResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -48,7 +52,7 @@ class CompanyUsersApi:
         *,
         filter_is_approved: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyCompanyIdUsersResponseDataTypesDataItem]:
         """Получить пользователей компании
         Метод позволяет получить пользователей компании.
         Объект имеет следующие поля:
@@ -68,7 +72,7 @@ class CompanyUsersApi:
             "/api/v1/company/{company_id}/users",
             path_params={"company_id": company_id},
             params={"filter[is_approved]": filter_is_approved},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyCompanyIdUsersResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 

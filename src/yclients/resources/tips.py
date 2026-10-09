@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import TipsSettingResponseDataTypesDataItem
 
 
 class TipsApi:
@@ -17,14 +18,14 @@ class TipsApi:
         self,
         company_id: int,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[TipsSettingResponseDataTypesDataItem]:
         """Получить список мастеров салона с их настройками чаевых
         """
         return await self._client.request(
             "GET",
             "/api/v1/tips/{company_id}/settings",
             path_params={"company_id": company_id},
-            response_model=list[dict[str, Any]],
+            response_model=list[TipsSettingResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -33,14 +34,14 @@ class TipsApi:
         company_id: float,
         master_tips_settings_id: int,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[TipsSettingResponseDataTypesDataItem]:
         """Включить чаевые у мастера
         """
         return await self._client.request(
             "GET",
             "/api/v1/tips/{company_id}/settings/{master_tips_settings_id}/enable",
             path_params={"company_id": company_id, "master_tips_settings_id": master_tips_settings_id},
-            response_model=list[dict[str, Any]],
+            response_model=list[TipsSettingResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -49,13 +50,13 @@ class TipsApi:
         company_id: int,
         master_tips_settings_id: int,
         extra_query: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[TipsSettingResponseDataTypesDataItem]:
         """Отключить чаевые у мастера
         """
         return await self._client.request(
             "POST",
             "/api/v1/tips/{company_id}/settings/{master_tips_settings_id}/disable",
             path_params={"company_id": company_id, "master_tips_settings_id": master_tips_settings_id},
-            response_model=list[dict[str, Any]],
+            response_model=list[TipsSettingResponseDataTypesDataItem],
             extra_query=extra_query,
         )

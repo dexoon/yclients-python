@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import VisitDetailsDataTypesData, VisitsVisitidDataTypesData
 
 
 class VisitsApi:
@@ -17,14 +18,14 @@ class VisitsApi:
         self,
         visit_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> VisitsVisitidDataTypesData:
         """Получить визит
         """
         return await self._client.request(
             "GET",
             "/api/v1/visits/{visit_id}",
             path_params={"visit_id": visit_id},
-            response_model=dict[str, Any],
+            response_model=VisitsVisitidDataTypesData,
             extra_query=extra_query,
         )
 
@@ -34,7 +35,7 @@ class VisitsApi:
         record_id: float,
         visit_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> VisitDetailsDataTypesData:
         """Получить детали визита
         **Блок "kkm_transaction_details_container"**
         Флаг  "last_operation_type"
@@ -54,7 +55,7 @@ class VisitsApi:
             "GET",
             "/api/v1/visit/details/{salon_id}/{record_id}/{visit_id}",
             path_params={"salon_id": salon_id, "record_id": record_id, "visit_id": visit_id},
-            response_model=dict[str, Any],
+            response_model=VisitDetailsDataTypesData,
             extra_query=extra_query,
         )
 

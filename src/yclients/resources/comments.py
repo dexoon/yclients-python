@@ -6,7 +6,10 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import CommentsCompanyidRequestDataTypes
+from yclients.models.schemas import (
+    CommentsCompanyidRequestDataTypes,
+    CommentsCompanyidRessponse200DataTypesDataItem,
+)
 
 
 class CommentsApi:
@@ -26,7 +29,7 @@ class CommentsApi:
         page_: float | None = None,
         count_: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CommentsCompanyidRessponse200DataTypesDataItem]:
         """Получить комментарии
         Объект комментарии имеет следующие поля:
         | Поле  | Тип | Описание |
@@ -47,7 +50,7 @@ class CommentsApi:
             "/api/v1/comments/{company_id}/",
             path_params={"company_id": company_id},
             params={"start_date": start_date, "end_date": end_date, "staff_id": staff_id, "rating": rating, "page": page_, "count": count_},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CommentsCompanyidRessponse200DataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -57,7 +60,7 @@ class CommentsApi:
         staff_id: float,
         data: CommentsCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CommentsCompanyidRessponse200DataTypesDataItem]:
         """Оставить комментарии
         """
         return await self._client.request(
@@ -65,6 +68,6 @@ class CommentsApi:
             "/api/v1/comments/{company_id}/{staff_id}",
             path_params={"company_id": company_id, "staff_id": staff_id},
             json_body=data,
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CommentsCompanyidRessponse200DataTypesDataItem],
             extra_query=extra_query,
         )

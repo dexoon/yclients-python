@@ -5,7 +5,10 @@ from __future__ import annotations
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import GetDepositHistoryDepositIdResponse200DataItem
+from yclients.models.schemas import (
+    DepositOperationResponseDataTypesData,
+    GetDepositHistoryDepositIdResponse200DataItem,
+)
 
 
 class DepositsApi:
@@ -18,7 +21,7 @@ class DepositsApi:
         self,
         salon_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> DepositOperationResponseDataTypesData:
         """Создание операции пополнения личного счёта
         Создание операции с личным счётом предполагает создание документа, транзакции с личным счётом и финансовой транзакции в рамках одного запроса к API.
         """
@@ -26,7 +29,7 @@ class DepositsApi:
             "POST",
             "/api/v1/deposits_operations/{salon_id}",
             path_params={"salon_id": salon_id},
-            response_model=dict[str, Any],
+            response_model=DepositOperationResponseDataTypesData,
             extra_query=extra_query,
         )
 

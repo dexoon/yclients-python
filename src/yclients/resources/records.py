@@ -6,7 +6,12 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
-from yclients.models.schemas import RecordsCompanyidRequestDataTypes
+from yclients.models.schemas import (
+    RecordCompanyidResponse201DataTypesData,
+    RecordCompanyidResponseDataTypesData,
+    RecordsCompanyidRequestDataTypes,
+    RecordsCompanyidResponseDataTypesDataItem,
+)
 
 
 class RecordsApi:
@@ -34,7 +39,7 @@ class RecordsApi:
         include_finance_transactions: float | None = None,
         with_deleted: bool | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[RecordsCompanyidResponseDataTypesDataItem]:
         """Получить список записей
         """
         return await self._client.request(
@@ -42,7 +47,7 @@ class RecordsApi:
             "/api/v1/records/{company_id}",
             path_params={"company_id": company_id},
             params={"page": page_, "count": count_, "staff_id": staff_id, "client_id": client_id, "created_user_id": created_user_id, "start_date": start_date, "end_date": end_date, "c_start_date": c_start_date, "c_end_date": c_end_date, "changed_after": changed_after, "changed_before": changed_before, "include_consumables": include_consumables, "include_finance_transactions": include_finance_transactions, "with_deleted": with_deleted},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[RecordsCompanyidResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -51,7 +56,7 @@ class RecordsApi:
         company_id: float,
         data: RecordsCompanyidRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[RecordsCompanyidResponseDataTypesDataItem]:
         """Создать новую запись
         Для групповых событий
         При создании записи в групповом событии параметр activity_id становится обязательным,
@@ -72,7 +77,7 @@ class RecordsApi:
             "/api/v1/records/{company_id}",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[RecordsCompanyidResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -106,7 +111,7 @@ class RecordsApi:
         include_consumables: float | None = None,
         include_finance_transactions: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> RecordCompanyidResponseDataTypesData:
         """Получить запись
         """
         return await self._client.request(
@@ -114,7 +119,7 @@ class RecordsApi:
             "/api/v1/record/{company_id}/{record_id}",
             path_params={"company_id": company_id, "record_id": record_id},
             params={"include_consumables": include_consumables, "include_finance_transactions": include_finance_transactions},
-            response_model=dict[str, Any],
+            response_model=RecordCompanyidResponseDataTypesData,
             extra_query=extra_query,
         )
 
@@ -127,7 +132,7 @@ class RecordsApi:
         include_consumables: float | None = None,
         include_finance_transactions: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    ) -> RecordCompanyidResponse201DataTypesData:
         """Изменить запись
         При изменении записи в групповом событии параметр activity_id становится обязательным,
         параметры staff_id, services, datetime, seance_length становятся необязательными
@@ -138,7 +143,7 @@ class RecordsApi:
             path_params={"company_id": company_id, "record_id": record_id},
             params={"include_consumables": include_consumables, "include_finance_transactions": include_finance_transactions},
             json_body=data,
-            response_model=dict[str, Any],
+            response_model=RecordCompanyidResponse201DataTypesData,
             extra_query=extra_query,
         )
 

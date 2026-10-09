@@ -9,8 +9,11 @@ from yclients._base import BaseClient
 from yclients.models.common import Page
 from yclients.models.schemas import (
     ClientCommentContainer,
+    ClientsCompanyidResponseDeprecatedDataTypesDataItem,
+    ClientsFilesClientidReaponseDataTypesDataItem,
     ClientVisitsHistory,
     CompanyCompanyidClientsSearchRequestDataTypes,
+    CompanyCompanyidClientsSearchResponseDataTypesDataItem,
     PostClientIdCommentsRequest,
     PostVisitsSearchRequest,
 )
@@ -27,7 +30,7 @@ class ClientsApi:
         company_id: float,
         data: CompanyCompanyidClientsSearchRequestDataTypes,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[CompanyCompanyidClientsSearchResponseDataTypesDataItem]:
         """Получить список клиентов
         """
         return await self._client.request(
@@ -35,7 +38,7 @@ class ClientsApi:
             "/api/v1/company/{company_id}/clients/search",
             path_params={"company_id": company_id},
             json_body=data,
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[CompanyCompanyidClientsSearchResponseDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -52,7 +55,7 @@ class ClientsApi:
         count_: float | None = None,
         id_: float | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[ClientsCompanyidResponseDeprecatedDataTypesDataItem]:
         """Устаревшее. Получить список клиентов
         + Параметр
         + company_id (required, number, `1`) - ID компании
@@ -73,7 +76,7 @@ class ClientsApi:
             "/api/v1/clients/{company_id}",
             path_params={"company_id": company_id},
             params={"fullname": fullname, "phone": phone, "email": email, "paid_min": paid_min, "paid_max": paid_max, "page": page_, "count": count_, "id": id_},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[ClientsCompanyidResponseDeprecatedDataTypesDataItem],
             extra_query=extra_query,
         )
 
@@ -110,7 +113,7 @@ class ClientsApi:
         company_id: float,
         client_id: float,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[ClientsFilesClientidReaponseDataTypesDataItem]:
         """Пример запроса на получение списка файлов клиента
         Список загруженных **файлов клиента** можно получить, сделав запрос с указанием идентификатора филиала и идентификатора клиента, для которого необходимо получить список.
         Идентификатор клиента можно получить из коллекции клиентов.
@@ -130,7 +133,7 @@ class ClientsApi:
             "GET",
             "/api/v1/company/{company_id}/clients/files/{client_id}",
             path_params={"company_id": company_id, "client_id": client_id},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[ClientsFilesClientidReaponseDataTypesDataItem],
             extra_query=extra_query,
         )
 

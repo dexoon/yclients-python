@@ -6,6 +6,7 @@ import builtins
 from typing import Any
 
 from yclients._base import BaseClient
+from yclients.models.schemas import ResourcesCompanyidDataTypesDataItem
 
 
 class ResourcesApi:
@@ -22,7 +23,7 @@ class ResourcesApi:
         content_type: str | None = None,
         authorization: str | None = None,
         extra_query: dict[str, Any] | None = None
-    ) -> builtins.list[dict[str, Any]]:
+    ) -> builtins.list[ResourcesCompanyidDataTypesDataItem]:
         """Получение ресурсов в филиале
         """
         return await self._client.request(
@@ -30,6 +31,6 @@ class ResourcesApi:
             "/api/v1/resources/{company_id}",
             path_params={"company_id": company_id},
             params={"Accept": accept, "Content-Type": content_type, "Authorization": authorization},
-            response_model=builtins.list[dict[str, Any]],
+            response_model=builtins.list[ResourcesCompanyidDataTypesDataItem],
             extra_query=extra_query,
         )

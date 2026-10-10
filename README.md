@@ -140,6 +140,48 @@ http = httpx.AsyncClient(
 client = YclientsClient(partner_token="...", http_client=http)
 ```
 
+## Webhooks
+
+YCLIENTS умеет слать HTTP POST-уведомления о событиях (записи, клиенты, услуги,
+товары, финансы и т.д.) на указанный в настройках филиала URL. В пакете есть
+pydantic-модели этих уведомлений и функция `parse_webhook()`, которая по полю
+`resource` сама выбирает нужный класс
+([документация webhooks](https://support.yclients.ru/67-69-993--webhooks-v-yclients/)):
+
+```python
+from yclients import parse_webhook
+
+def handle(body: bytes) -> None:
+    event = parse_webhook(body)          # str | bytes | dict
+    print(event.company_id, event.resource, event.status)
+
+    match event.resource:                # тип сужается по resource
+        case "record":
+            print("запись", event.resource_id, event.data and event.data.comment)
+        case "client":
+            print("клиент", event.data and event.data.display_name)
+        case "goods_operations_sale":
+            print("продажа", event.data and event.data.cost)
+        case _:
+            print("неизвестный ресурс", event.resource)   # UnknownWebhook
+```
+
+Особенности формата, учтённые в моделях:
+
+- payload частичный: в `data` приходят только изменившиеся поля, поэтому все
+  поля моделей необязательны;
+- незнакомые поля не теряются (`extra="allow"`, доступны через `model_extra`);
+- у товарных операций `client`/`master`/`service` приходят то объектом, то
+  массивом -- поля типизированы как union;
+- неизвестный тип ресурса разбирается в `UnknownWebhook`, а не роняет
+  обработчик; полностью некорректное тело даёт `pydantic.ValidationError`.
+
+Поддерживаемые ресурсы: `staff`, `good`, `service`, `service_category`,
+`client`, `record`, `goods_operations_sale`, `goods_operations_receipt`,
+`goods_operations_consumable`, `goods_operations_stolen`,
+`goods_operations_move`, `finances_operation`. Рабочий пример HTTP-эндпоинта --
+[examples/webhook_server.py](examples/webhook_server.py).
+
 ## Перегенерация кода
 
 Клиент генерируется из спеки `docs/openapi.json` (извлечена с developers.yclients.com):
@@ -149,7 +191,8 @@ python scripts/generate.py
 ```
 
 Ручные правки в `src/yclients/models/schemas/`, `src/yclients/resources/*` и
-`src/yclients/client.py` будут потеряны -- правьте генератор.
+`src/yclients/client.py` будут потеряны -- правьте генератор. (Модуль webhooks
+`src/yclients/webhooks.py` написан вручную и перегенерацией не затрагивается.)
 
 ## Примеры
 

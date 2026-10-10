@@ -47,7 +47,7 @@ from .webhooks import (
     parse_webhook,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "ClientWebhook",
